@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2020 a las 02:41:40
+-- Tiempo de generación: 01-06-2020 a las 19:22:47
 -- Versión del servidor: 10.4.6-MariaDB
 -- Versión de PHP: 7.3.9
 
@@ -66,6 +66,7 @@ CREATE TABLE `atleta` (
   `lesiones_graves` varchar(500) NOT NULL,
   `fracturas` varchar(500) NOT NULL,
   `sexo` varchar(10) NOT NULL,
+  `cedula_entrenador` int(20) NOT NULL,
   `usuario` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -73,8 +74,10 @@ CREATE TABLE `atleta` (
 -- Volcado de datos para la tabla `atleta`
 --
 
-INSERT INTO `atleta` (`cedula_atleta`, `nombre`, `apellidos`, `edad`, `telefono`, `correo`, `estatura`, `peso`, `talla_camisa`, `tipo_sangre`, `alergias`, `operaciones`, `lesiones_graves`, `fracturas`, `sexo`, `usuario`) VALUES
-(123, 'santiago', 'toro', 20, 29999, 'santiago@gmail.com', 135, 20, 16, 'o', 'ninguna', 'ninguna', 'esguince', 'tobillo', 'hombre', 'santi123');
+INSERT INTO `atleta` (`cedula_atleta`, `nombre`, `apellidos`, `edad`, `telefono`, `correo`, `estatura`, `peso`, `talla_camisa`, `tipo_sangre`, `alergias`, `operaciones`, `lesiones_graves`, `fracturas`, `sexo`, `cedula_entrenador`, `usuario`) VALUES
+(123, 'santiago', 'toro', 20, 29999, 'santiago@gmail.com', 135, 20, 16, 'o', 'ninguna', 'ninguna', 'esguince', 'tobillo', 'hombre', 789, 'santi123'),
+(1234, 'mateo', 'ortega garcia', 19, 4123555, 'mateoor@htomail.com', 169, 65, 16, 'o', 'polen', 'ninguna', 'ninguna', 'cadera', 'masculino', 789, 'mateoAT'),
+(12345, 'jose', 'gonzales duque', 25, 2673457, 'joseGD@mail.com', 175, 80, 18, 'A', 'ninguna', 'ninguna', 'ninguna', 'ninguna', 'masculino', 9983, 'joseGD');
 
 -- --------------------------------------------------------
 
@@ -89,6 +92,15 @@ CREATE TABLE `dato_deportivo` (
   `pruebas` varchar(500) NOT NULL,
   `cedula_atleta` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `dato_deportivo`
+--
+
+INSERT INTO `dato_deportivo` (`id_dato_deportivo`, `especialidades`, `año_activo`, `pruebas`, `cedula_atleta`) VALUES
+(1, 'carreras, saltos', 2020, '100 metros vallas, salto de altura', 123),
+(3, 'pruebas combinadas', 2019, 'declatón 100m, declatón 200m', 12345),
+(6, 'lanzamiento', 2016, 'lanzamiento de peso', 1234);
 
 -- --------------------------------------------------------
 
@@ -110,7 +122,8 @@ CREATE TABLE `entrenador` (
 --
 
 INSERT INTO `entrenador` (`cedula_entrenador`, `nombre`, `apellidos`, `telefono`, `correo`, `usuario`) VALUES
-(789, 'carlos', 'molina', 29999, 'carlos@hotmail.com', 'carlos123');
+(789, 'carlos', 'molina', 29999, 'carlos@hotmail.com', 'carlos123'),
+(9983, 'eduardo', 'aguirre hernandez', 4781626, 'edua@hotmail.com', 'eduardoEN');
 
 -- --------------------------------------------------------
 
@@ -125,6 +138,14 @@ CREATE TABLE `entrenamiento` (
   `dias` varchar(100) NOT NULL,
   `cedula_entrenador` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `entrenamiento`
+--
+
+INSERT INTO `entrenamiento` (`id_entrenamiento`, `lugar`, `hora`, `dias`, `cedula_entrenador`) VALUES
+(1, 'atanasio girardot', '16:00', 'jueves, sabados', 789),
+(3, 'Politécnico Jaime Isaza Cadavid', '18:00', 'lunes,miércoles,viernes', 9983);
 
 -- --------------------------------------------------------
 
@@ -141,6 +162,15 @@ CREATE TABLE `evento` (
   `cedula_entrenador` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `evento`
+--
+
+INSERT INTO `evento` (`id_evento`, `lugar`, `requisitos`, `fecha`, `hora`, `cedula_entrenador`) VALUES
+(1, 'tulio ospina', 'material de entrenamiento', '2020-04-07', '13:00', 789),
+(2, 'atanasio girardot', 'ninguno', '2020-02-13', '12:00', 789),
+(3, 'atanasio girardot', 'ninguno', '2020-05-14', '17:00', 9983);
+
 -- --------------------------------------------------------
 
 --
@@ -150,8 +180,19 @@ CREATE TABLE `evento` (
 CREATE TABLE `mejor_resultado` (
   `cedula_atleta` int(20) NOT NULL,
   `id_evento` int(20) NOT NULL,
-  `marca` int(50) NOT NULL
+  `marca` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `mejor_resultado`
+--
+
+INSERT INTO `mejor_resultado` (`cedula_atleta`, `id_evento`, `marca`) VALUES
+(123, 1, 9.58),
+(1234, 1, 10.11),
+(123, 2, 13.56),
+(1234, 2, 17.23),
+(12345, 3, 10.45);
 
 -- --------------------------------------------------------
 
@@ -171,7 +212,10 @@ CREATE TABLE `sesion` (
 
 INSERT INTO `sesion` (`usuario`, `clave`, `rol`) VALUES
 ('carlos123', '123', 'entrenador'),
+('eduardoEN', '123', 'entrenador'),
 ('javier123', '123', 'administrador'),
+('joseGD', '123', 'atleta'),
+('mateoAT', '123', 'atleta'),
 ('santi123', '123', 'atleta');
 
 --
@@ -183,14 +227,16 @@ INSERT INTO `sesion` (`usuario`, `clave`, `rol`) VALUES
 --
 ALTER TABLE `administrador`
   ADD PRIMARY KEY (`cedula`),
-  ADD UNIQUE KEY `usuario` (`usuario`);
+  ADD UNIQUE KEY `usuario` (`usuario`),
+  ADD UNIQUE KEY `correo` (`correo`);
 
 --
 -- Indices de la tabla `atleta`
 --
 ALTER TABLE `atleta`
   ADD PRIMARY KEY (`cedula_atleta`),
-  ADD KEY `usuario` (`usuario`);
+  ADD UNIQUE KEY `usuario` (`usuario`),
+  ADD KEY `cedula_entrenador` (`cedula_entrenador`);
 
 --
 -- Indices de la tabla `dato_deportivo`
@@ -241,19 +287,19 @@ ALTER TABLE `sesion`
 -- AUTO_INCREMENT de la tabla `dato_deportivo`
 --
 ALTER TABLE `dato_deportivo`
-  MODIFY `id_dato_deportivo` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_dato_deportivo` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `entrenamiento`
 --
 ALTER TABLE `entrenamiento`
-  MODIFY `id_entrenamiento` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_entrenamiento` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `evento`
 --
 ALTER TABLE `evento`
-  MODIFY `id_evento` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_evento` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
@@ -269,7 +315,8 @@ ALTER TABLE `administrador`
 -- Filtros para la tabla `atleta`
 --
 ALTER TABLE `atleta`
-  ADD CONSTRAINT `atleta_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `sesion` (`usuario`);
+  ADD CONSTRAINT `atleta_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `sesion` (`usuario`),
+  ADD CONSTRAINT `atleta_ibfk_2` FOREIGN KEY (`cedula_entrenador`) REFERENCES `entrenador` (`cedula_entrenador`);
 
 --
 -- Filtros para la tabla `dato_deportivo`
