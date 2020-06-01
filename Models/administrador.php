@@ -19,6 +19,14 @@
                echo json_encode($administrador);
             }
          }
+
+         public function actualizarAdministrador($administrador) {
+            include self::rutaConfig();
+
+            $conexion->query(" UPDATE administrador SET  `nombre` = '$administrador->nombre', `apellidos` = '$administrador->apellidos', 
+                                                         `telefono` = '$administrador->telefono', `correo` = '$administrador->correo' 
+                                                          WHERE cedula_atleta = '$administrador->cedula' ");
+         }
    
          public function almacenarInfoAdministrador($info) {
             $data = array(

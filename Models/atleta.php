@@ -50,10 +50,18 @@
          echo json_encode($atletasEntrenador);
       }
 
-      public function actualizaAtleta() {
+      public function actualizaAtleta($atleta) {
+         include self::rutaConfig();
          
+         $conexion->query(" UPDATE atleta SET  `nombre` = '$atleta->nombre', `apellidos` = '$atleta->apellidos', 
+                                                `edad` = '$atleta->edad', `telefono` = '$atleta->telefono', `correo` = '$atleta->correo', 
+                                                `estatura` = '$atleta->estatura', `peso` = '$atleta->peso', `talla_camisa` = '$atleta->talla_camisa', 
+                                                `tipo_sangre` = '$atleta->tipo_sangre', `alergias` = '$atleta->alergias', `operaciones` = '$atleta->operaciones', 
+                                                `lesiones_graves` = '$atleta->lesiones_graves', `fracturas` = '$atleta->fracturas', `sexo` = '$atleta->sexo'
+                                                WHERE cedula_atleta = '$atleta->cedula' ");
+
       }
-      
+
       public function crearAtleta() {
          
       }  
