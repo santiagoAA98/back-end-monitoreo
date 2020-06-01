@@ -17,9 +17,79 @@
       private $datosDeportivos;
       private $mejorResultado = array();
 
-      public function __construct(){
-         // 
+      public function rutaConfig(){
+         $path =  realpath(dirname(__FILE__) . '/..');
+         return $path . "/Config/index.php";
+     }
+
+      public function consultarAtleta($usuario){
+         include self::rutaConfig();
+
+         $sqlAtleta = "SELECT * FROM atleta WHERE usuario = '$usuario' ";
+         $resultadoAtleta = $conexion->query($sqlAtleta);
+
+         if (($fila = $resultadoAtleta->fetch_array())==true) { 
+            $atletas = self::almacenarInfoAtleta($fila);
+            echo json_encode($atletas);
+         }
       }
+
+      public function consultarAtletasEntrenador($id_entrenador) {
+         include self::rutaConfig();
+
+         $atletasEntrenador = array();
+
+         $sqlAtletas = "SELECT * FROM atleta WHERE cedula_entrenador = '$id_entrenador' ";
+         $resultadoAtletas = $conexion->query($sqlAtletas);
+
+         while(($fila = $resultadoAtletas->fetch_array())) {
+            $atletas = self::almacenarInfoAtleta($fila);
+            array_push($atletasEntrenador, $atletas);
+         }
+
+         echo json_encode($atletasEntrenador);
+      }
+
+      public function actualizaAtleta() {
+         
+      }
+      
+      public function crearAtleta() {
+         
+      }  
+
+      public function eliminarAtleta() {
+         
+      }
+
+      public function actualizarMejorMarcaMes() {
+
+      }
+
+      public function almacenarInfoAtleta($info) {
+         $data = array(
+            'cedula' => $info['cedula_atleta'],
+            'nombre' => $info['nombre'],
+            'apellidos' => $info['apellidos'],
+            'edad' => $info['edad'],
+            'telefono' => $info['telefono'],
+            'correo' => $info['correo'],
+            'estatura' => $info['estatura'],
+            'peso' => $info['peso'],
+            'talla_camisa' => $info['talla_camisa'],
+            'tipo_sangre' => $info['tipo_sangre'],
+            'alergias' => $info['alergias'],
+            'operaciones' => $info['operaciones'],
+            'lesiones_graves' => $info['lesiones_graves'],
+            'fracturas' => $info['fracturas'],
+            'sexo' => $info['sexo']
+         );
+
+         return $data;
+      }
+
+
+
 
       public function getEdad() {
          return $this->edad;

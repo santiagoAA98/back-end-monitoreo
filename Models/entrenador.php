@@ -5,8 +5,20 @@
     class Entrenador extends Usuario {
         private $entrenamieto;
 
-        public function __construct(){
-           // $this->entrenamieto = new Entrenamiento('hola');
+        public function consultarEntrenador(){
+           
+        }
+
+        public function actualizaAtleta() {
+         
+        }
+        
+        public function crearAtleta() {
+           
+        }  
+  
+        public function eliminarAtleta() {
+           
         }
         
         public function getEntrenamiento() {
