@@ -5,5 +5,5 @@
     $params = json_decode($json);
 
     $entrenador = new Entrenador();
-    $entrenador->actualizaEntrenador('hola');
+    $entrenador->actualizaEntrenador($params);
 ?>

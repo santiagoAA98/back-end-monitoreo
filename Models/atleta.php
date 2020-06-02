@@ -25,7 +25,7 @@
       public function consultarAtleta($usuario){
          include self::rutaConfig();
 
-         $sqlAtleta = "SELECT * FROM atleta WHERE usuario = '$usuario' ";
+         $sqlAtleta = "SELECT * FROM atleta WHERE usuario = '$usuario' AND estado != 'eliminado' ";
          $resultadoAtleta = $conexion->query($sqlAtleta);
 
          if (($fila = $resultadoAtleta->fetch_array())==true) { 
@@ -39,7 +39,7 @@
 
          $atletasEntrenador = array();
 
-         $sqlAtletas = "SELECT * FROM atleta WHERE cedula_entrenador = '$id_entrenador' ";
+         $sqlAtletas = "SELECT * FROM atleta WHERE cedula_entrenador = '$id_entrenador' AND estado != 'eliminado' ";
          $resultadoAtletas = $conexion->query($sqlAtletas);
 
          while(($fila = $resultadoAtletas->fetch_array())) {
@@ -64,8 +64,8 @@
 
       public function crearAtleta($atleta) {
          include self::rutaConfig();
-         self::crearSesionAtleta($atleta->usuario, $atleta->clave);
-         self::crearSesionDatoDeportivoAtleta($atleta);
+         self::crearSesionAtleta('$atleta->usuario', '$atleta->clave');
+         
 
          $conexion->query(" INSERT INTO atleta (cedula_atleta, nombre, apellidos, edad, telefono,
                                                 correo, estatura, peso, talla_camisa, tipo_sangre,
@@ -75,28 +75,37 @@
                                                 '$atleta->correo', '$atleta->estatura', '$atleta->peso', '$atleta->talla_camisa', '$atleta->tipo_sangre',
                                                 '$atleta->alergias', '$atleta->operaciones', '$atleta->lesiones_graves', '$atleta->fracturas',
                                                 '$atleta->sexo', 'activo', '$atleta->usuario') ");
+
+         self::crearDatoDeportivoAtleta($atleta);
       }  
 
       public function crearSesionAtleta($usuarioSesion, $claveSesion) {
+         include self::rutaConfig();
+
          $conexion->query(" INSERT INTO sesion (usuario, clave, rol) 
                                          VALUE ('$usuarioSesion', '$claveSesion', 'atleta' ) ");
      }
       
      public function crearDatoDeportivoAtleta($dato_deportivo) {
-         $conexion->query(" INSERT INTO sesion (especialidades, año_activo, pruebas
-                                                cedula_atleta) 
-                                         VALUE ('$dato_deportivo->especialidades', '$dato_deportivo->año_activo', '$dato_deportivo->pruebas'
-                                                '$dato_deportivo->cedula_atleta') ");
+         include self::rutaConfig();
+
+         $conexion->query(" INSERT INTO dato_deportivo (especialidades, año_activo, 
+                                                            pruebas, cedula_atleta) 
+                                                   VALUE ('$dato_deportivo->especialidades', '$dato_deportivo->año_activo', 
+                                                            '$dato_deportivo->pruebas', $dato_deportivo->cedula_atleta') ");
      }
 
       public function eliminarAtleta($cedula_atleta) {
          include self::rutaConfig();
 
-         $conexion->query(" INSERT INTO atleta (estado) VALUE ('eliminado') WHERE cedula_atleta = '$cedula_atleta' ");
+        $conexion->query(" UPDATE atleta SET `estado` = 'eliminado' WHERE cedula_atleta = '$cedula_atleta' ");
       }
 
-      public function actualizarMejorMarcaMes() {
+      public function actualizarMejorMarcaMes($datos) {
          include self::rutaConfig();
+
+         $conexion->query(" INSERT INTO evento (cedula_atleta, id_evento, marca) 
+                                            VALUE ('$datos->cedula_atleta', '$datos->id_evento', '$datos->marca' ");
       }
 
       public function almacenarInfoAtleta($info) {

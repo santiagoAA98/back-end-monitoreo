@@ -6,5 +6,4 @@
 
     $evento = new Evento();
     $evento->crearEvento($params);
-
 ?>

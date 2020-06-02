@@ -5,5 +5,5 @@
     $params = json_decode($json);
     	
     $atleta = new Atleta();
-    $atleta->consultarAtleta('santi123');
+    $atleta->consultarAtleta($params);
 ?>

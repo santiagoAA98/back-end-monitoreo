@@ -5,5 +5,5 @@
     $params = json_decode($json);
     	
     $administrador = new Administrador();
-    $administrador->consultarAdministrador('456');
+    $administrador->consultarAdministrador($params);
 ?>
