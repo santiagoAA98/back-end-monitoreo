@@ -50,7 +50,7 @@
          echo json_encode($atletasEntrenador);
       }
 
-      public function actualizaAtleta($atleta) {
+      public function actualizarAtleta($atleta) {
          include self::rutaConfig();
          
          $conexion->query(" UPDATE atleta SET  `nombre` = '$atleta->nombre', `apellidos` = '$atleta->apellidos', 
@@ -58,20 +58,45 @@
                                                 `estatura` = '$atleta->estatura', `peso` = '$atleta->peso', `talla_camisa` = '$atleta->talla_camisa', 
                                                 `tipo_sangre` = '$atleta->tipo_sangre', `alergias` = '$atleta->alergias', `operaciones` = '$atleta->operaciones', 
                                                 `lesiones_graves` = '$atleta->lesiones_graves', `fracturas` = '$atleta->fracturas', `sexo` = '$atleta->sexo'
-                                                WHERE cedula_atleta = '$atleta->cedula' ");
+                                          WHERE cedula_atleta = '$atleta->cedula' ");
 
       }
 
-      public function crearAtleta() {
-         
+      public function crearAtleta($atleta) {
+         include self::rutaConfig();
+         self::crearSesionAtleta($atleta->usuario, $atleta->clave);
+         self::crearSesionDatoDeportivoAtleta($atleta);
+
+         $conexion->query(" INSERT INTO atleta (cedula_atleta, nombre, apellidos, edad, telefono,
+                                                correo, estatura, peso, talla_camisa, tipo_sangre,
+                                                alergias, operaciones, lesiones_graves, fracturas,
+                                                sexo, estado, usuario) 
+                                          VALUE ('$atleta->cedula_atleta', '$atleta->nombre', '$atleta->apellidos', '$atleta->edad', '$atleta->telefono',
+                                                '$atleta->correo', '$atleta->estatura', '$atleta->peso', '$atleta->talla_camisa', '$atleta->tipo_sangre',
+                                                '$atleta->alergias', '$atleta->operaciones', '$atleta->lesiones_graves', '$atleta->fracturas',
+                                                '$atleta->sexo', 'activo', '$atleta->usuario') ");
       }  
 
-      public function eliminarAtleta() {
-         
+      public function crearSesionAtleta($usuarioSesion, $claveSesion) {
+         $conexion->query(" INSERT INTO sesion (usuario, clave, rol) 
+                                         VALUE ('$usuarioSesion', '$claveSesion', 'atleta' ) ");
+     }
+      
+     public function crearDatoDeportivoAtleta($dato_deportivo) {
+         $conexion->query(" INSERT INTO sesion (especialidades, año_activo, pruebas
+                                                cedula_atleta) 
+                                         VALUE ('$dato_deportivo->especialidades', '$dato_deportivo->año_activo', '$dato_deportivo->pruebas'
+                                                '$dato_deportivo->cedula_atleta') ");
+     }
+
+      public function eliminarAtleta($cedula_atleta) {
+         include self::rutaConfig();
+
+         $conexion->query(" INSERT INTO atleta (estado) VALUE ('eliminado') WHERE cedula_atleta = '$cedula_atleta' ");
       }
 
       public function actualizarMejorMarcaMes() {
-
+         include self::rutaConfig();
       }
 
       public function almacenarInfoAtleta($info) {
@@ -95,9 +120,6 @@
 
          return $data;
       }
-
-
-
 
       public function getEdad() {
          return $this->edad;

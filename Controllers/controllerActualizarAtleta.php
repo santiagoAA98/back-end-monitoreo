@@ -5,5 +5,5 @@
     $params = json_decode($json);
 
     $atleta = new Atleta();
-    $atleta->actualizaAtleta($params);
+    $atleta->actualizarAtleta($params);
 ?>

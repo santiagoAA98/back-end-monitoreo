@@ -26,16 +26,37 @@
             include self::rutaConfig();
 
             $conexion->query(" UPDATE entrenador SET  `nombre` = '$entrenador->nombre', `apellidos` = '$entrenador->apellidos', 
-                                                         `telefono` = '$entrenador->telefono', `correo` = '$entrenador->correo' 
-                                                          WHERE cedula_entrenador = '$entrenador->cedula' ");
+                                                      `telefono` = '$entrenador->telefono', `correo` = '$entrenador->correo' 
+                                                 WHERE cedula_entrenador = '$entrenador->cedula' ");
         }
         
-        public function crearEntrenador() {
-           
+        public function crearEntrenador($entrenador) {
+            include self::rutaConfig();
+            self::crearSesionEntrenador($entrenador->usuario, $entrenador->clave);
+            self::crearEntrenamientoEntrenador($entrenador);
+
+            $conexion->query(" INSERT INTO atleta (cedula_atleta, nombre, apellidos, 
+                                                   telefono, correo, estado, usuario) 
+                                          VALUE ('$atleta->cedula_entrenador', '$atleta->nombre', '$atleta->apellidos', 
+                                                '$atleta->telefono', '$atleta->correo', 'activo', '$atleta->usuario') ");
         }  
+
+        public function crearSesionEntrenador($usuarioSesion, $claveSesion, $rolSesion) {
+            $conexion->query(" INSERT INTO sesion (usuario, clave, rol) 
+                                         VALUE ('$usuarioSesion', '$claveSesion', 'entrenador' ) ");
+        }
+
+        public function crearEntrenamientoEntrenador($entrenamiento) {
+            $conexion->query(" INSERT INTO entrenamiento (lugar, hora, dias, 
+                                                    cedula_entrenador) 
+                                         VALUE ('$entrenamiento->lugar', '$entrenamiento->hora', '$entrenamiento->dias', 
+                                                    '$entrenamiento->cedula_entrenador') ");
+        }
   
-        public function eliminarEntrenador() {
-           
+        public function eliminarEntrenador($cedula_entrenador) {
+            include self::rutaConfig();
+
+            $conexion->query(" INSERT INTO entrenador (estado) VALUE ('eliminado') WHERE cedula_entrenador = '$cedula_entrenador' ");
         }
 
         public function almacenarInfoEntrenador($info) {
@@ -58,4 +79,4 @@
             $this->entrenamieto = $entrenamieto;
         }
     }
-?>
+?>  
