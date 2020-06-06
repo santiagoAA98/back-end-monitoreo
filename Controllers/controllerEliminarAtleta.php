@@ -5,5 +5,5 @@
     $params = json_decode($json);
 
     $atleta = new Atleta();
-    $atleta->eliminarAtleta($params);
+    $atleta->eliminarAtleta($params->cedula_atleta);
 ?>

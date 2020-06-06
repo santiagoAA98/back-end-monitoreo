@@ -10,6 +10,21 @@
             return $path . "/Config/index.php";
         }
 
+        public function getCedulasEntrenadores() {
+            include self::rutaConfig();
+   
+            $sqlEntrenador = "SELECT cedula_entrenador FROM entrenador ";
+            $resultadoEntrenadores = $conexion->query($sqlEntrenador);
+   
+            $cedulasEntrenadores = array();
+   
+            while(($fila = $resultadoEntrenadores->fetch_array())) {
+               array_push($cedulasEntrenadores, $fila['cedula_entrenador']);
+            }
+   
+            echo json_encode($cedulasEntrenadores);
+        }
+
         public function consultarEntrenador($usuario){
             include self::rutaConfig();
 
@@ -27,19 +42,19 @@
 
             $conexion->query(" UPDATE entrenador SET  `nombre` = '$entrenador->nombre', `apellidos` = '$entrenador->apellidos', 
                                                       `telefono` = '$entrenador->telefono', `correo` = '$entrenador->correo' 
-                                                 WHERE cedula_entrenador = '$entrenador->cedula' ");
+                                                 WHERE cedula_entrenador = '$entrenador->cedula' ");    
         }
         
         public function crearEntrenador($entrenador) {
             include self::rutaConfig();
             self::crearSesionEntrenador($entrenador->usuario, $entrenador->clave);
             
-            $conexion->query(" INSERT INTO entrenador (cedula_atleta, nombre, apellidos, 
+            $conexion->query(" INSERT INTO entrenador (cedula_entrenador, nombre, apellidos, 
                                                    telefono, correo, estado, usuario) 
-                                          VALUE ('$atleta->cedula_entrenador', '$atleta->nombre', '$atleta->apellidos', 
-                                                '$atleta->telefono', '$atleta->correo', 'activo', '$atleta->usuario') ");
-
+                                          VALUE ('$entrenador->cedula_entrenador', '$entrenador->nombre', '$entrenador->apellidos', 
+                                                '$entrenador->telefono', '$entrenador->correo', 'activo', '$entrenador->usuario') ");
             self::crearEntrenamientoEntrenador($entrenador);
+            echo  json_encode(array('estado' => 'ok'));
         }  
 
         public function crearSesionEntrenador($usuarioSesion, $claveSesion) {
@@ -62,6 +77,7 @@
             include self::rutaConfig();
 
             $conexion->query(" UPDATE entrenador SET `estado` = 'eliminado' WHERE cedula_entrenador = '$cedula_entrenador' ");
+            echo  json_encode(array('estado' => 'ok'));
         }
 
         public function almacenarInfoEntrenador($info) {

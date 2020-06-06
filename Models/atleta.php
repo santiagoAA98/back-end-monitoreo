@@ -21,6 +21,21 @@
          $path =  realpath(dirname(__FILE__) . '/..');
          return $path . "/Config/index.php";
      }
+     
+     public function getCedulasAtletas() {
+         include self::rutaConfig();
+
+         $sqlAtleta = "SELECT cedula_atleta FROM atleta ";
+         $resultadoAtletas = $conexion->query($sqlAtleta);
+
+         $cedulasAtletas = array();
+
+         while(($fila = $resultadoAtletas->fetch_array())) {
+            array_push($cedulasAtletas, $fila['cedula_atleta']);
+         }
+
+         echo json_encode($cedulasAtletas);
+     }
 
       public function consultarAtleta($usuario){
          include self::rutaConfig();
@@ -64,7 +79,7 @@
 
       public function crearAtleta($atleta) {
          include self::rutaConfig();
-         self::crearSesionAtleta('$atleta->usuario', '$atleta->clave');
+         self::crearSesionAtleta($atleta->usuario, $atleta->clave);
          
 
          $conexion->query(" INSERT INTO atleta (cedula_atleta, nombre, apellidos, edad, telefono,
@@ -77,6 +92,7 @@
                                                 '$atleta->sexo', 'activo', '$atleta->usuario') ");
 
          self::crearDatoDeportivoAtleta($atleta);
+         echo  json_encode(array('estado' => 'ok'));
       }  
 
       public function crearSesionAtleta($usuarioSesion, $claveSesion) {
@@ -92,13 +108,16 @@
          $conexion->query(" INSERT INTO dato_deportivo (especialidades, año_activo, 
                                                             pruebas, cedula_atleta) 
                                                    VALUE ('$dato_deportivo->especialidades', '$dato_deportivo->año_activo', 
-                                                            '$dato_deportivo->pruebas', $dato_deportivo->cedula_atleta') ");
+                                                            '$dato_deportivo->pruebas', '$dato_deportivo->cedula_atleta') ");
+
+         echo  json_encode(array('estado' => mysqli_error($conexion)));
      }
 
       public function eliminarAtleta($cedula_atleta) {
          include self::rutaConfig();
 
         $conexion->query(" UPDATE atleta SET `estado` = 'eliminado' WHERE cedula_atleta = '$cedula_atleta' ");
+        echo  json_encode(array('estado' => 'ok'));
       }
 
       public function actualizarMejorMarcaMes($datos) {

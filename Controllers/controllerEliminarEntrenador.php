@@ -5,5 +5,5 @@
     $params = json_decode($json);
 
     $entrenador = new Entrenador();
-    $entrenador->eliminarEntrenador($params);
+    $entrenador->eliminarEntrenador($params->cedula_entrenador);
 ?>

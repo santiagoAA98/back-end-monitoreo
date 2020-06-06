@@ -8,10 +8,10 @@
             return $path . "/Config/index.php";
         }
    
-         public function consultarAdministrador($cedulaAdministrador){
+         public function consultarAdministrador(){
             include self::rutaConfig();
    
-            $sqlAdministrador = "SELECT * FROM administrador WHERE cedula = '$cedulaAdministrador' ";
+            $sqlAdministrador = "SELECT * FROM administrador ";
             $resultadoAdministrador = $conexion->query($sqlAdministrador);
    
             if (($fila = $resultadoAdministrador->fetch_array())==true) { 
@@ -25,7 +25,7 @@
 
             $conexion->query(" UPDATE administrador SET  `nombre` = '$administrador->nombre', `apellidos` = '$administrador->apellidos', 
                                                          `telefono` = '$administrador->telefono', `correo` = '$administrador->correo' 
-                                                          WHERE cedula_atleta = '$administrador->cedula' ");
+                                                          WHERE cedula = '$administrador->cedula' ");
          }
    
          public function almacenarInfoAdministrador($info) {
