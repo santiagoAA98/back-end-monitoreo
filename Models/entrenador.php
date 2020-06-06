@@ -43,6 +43,8 @@
             $conexion->query(" UPDATE entrenador SET  `nombre` = '$entrenador->nombre', `apellidos` = '$entrenador->apellidos', 
                                                       `telefono` = '$entrenador->telefono', `correo` = '$entrenador->correo' 
                                                  WHERE cedula_entrenador = '$entrenador->cedula' ");    
+                                                 
+            echo  json_encode(array('estado' => 'ok'));
         }
         
         public function crearEntrenador($entrenador) {
