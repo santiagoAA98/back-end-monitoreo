@@ -31,13 +31,13 @@
         public function consultarEventosDisponibles($cedulaAtleta) {
             include self::rutaConfig();
 
-            $sqlEvento = "SELECT atleta.nombre, evento.id_evento, evento.lugar, evento.requisitos, evento.fecha, evento.hora 
+            $sqlEvento = "SELECT atleta.cedula_atleta, atleta.nombre, evento.id_evento, evento.lugar, evento.requisitos, evento.fecha, evento.hora 
                           FROM atleta
                           INNER JOIN mejor_resultado
                           ON mejor_resultado.cedula_atleta = atleta.cedula_atleta
                           INNER JOIN evento
                           ON evento.id_evento = mejor_resultado.id_evento
-                          WHERE atleta.cedula_atleta = '123' AND mejor_resultado.marca IS NULL ";
+                          WHERE atleta.cedula_atleta = '$cedulaAtleta' AND mejor_resultado.marca IS NULL ";
 
             $resultadoEventos = $conexion->query($sqlEvento);
 
@@ -51,9 +51,20 @@
             echo json_encode($eventos);
         }
 
+        public function agregarResultado($evento) {
+            include self::rutaConfig();
+            
+            $conexion->query(" UPDATE mejor_resultado SET
+                               `marca` = '$evento->marca' 
+                               WHERE id_evento = '$evento->idEvento' AND cedula_atleta = '$evento->cedulaAtleta' ");
+
+            echo  json_encode(array('estado' => mysqli_error($conexion)));
+        }
+
         public function almacenarEventos($info) {
             $data = array(
                'idEvento' => $info['id_evento'],
+               'cedulaAtleta' => $info['cedula_atleta'],
                'nombreAtleta' => $info['nombre'],
                'lugar' => $info['lugar'],
                'requisitos' => $info['requisitos'],
