@@ -1,8 +1,5 @@
 <?php 
-    include 'usuario.php';
-    include 'entrenamiento.php';
-
-    class Entrenador extends Usuario {
+    class Entrenador {
         private $entrenamieto;
 
         public function rutaConfig(){
@@ -94,12 +91,5 @@
             return $data;
          }
         
-        public function getEntrenamiento() {
-            return $this->entrenamieto;
-        }
-
-        public function setEntrenamiento($entrenamieto) {
-            $this->entrenamieto = $entrenamieto;
-        }
     }
 ?>  

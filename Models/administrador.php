@@ -1,7 +1,5 @@
 <?php
-    include 'usuario.php';
-
-    class Administrador extends Usuario {
+    class Administrador {
 
         public function rutaConfig(){
             $path =  realpath(dirname(__FILE__) . '/..');

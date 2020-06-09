@@ -1,10 +1,6 @@
 <?php 
 
     class Sesion {
-        private $usuario;
-        private $clave;
-        private $rol;
-
         public function rutaConfig(){
             $path =  realpath(dirname(__FILE__) . '/..');
             return $path . "/Config/index.php";
