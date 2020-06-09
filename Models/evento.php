@@ -27,5 +27,41 @@
                                                         VALUE ('$cedula', '$idEvento') ");
             }
         }
+
+        public function consultarEventosDisponibles($cedulaAtleta) {
+            include self::rutaConfig();
+
+            $sqlEvento = "SELECT atleta.nombre, evento.id_evento, evento.lugar, evento.requisitos, evento.fecha, evento.hora 
+                          FROM atleta
+                          INNER JOIN mejor_resultado
+                          ON mejor_resultado.cedula_atleta = atleta.cedula_atleta
+                          INNER JOIN evento
+                          ON evento.id_evento = mejor_resultado.id_evento
+                          WHERE atleta.cedula_atleta = '123' AND mejor_resultado.marca IS NULL ";
+
+            $resultadoEventos = $conexion->query($sqlEvento);
+
+            $eventos = array();
+
+            while(($fila = $resultadoEventos->fetch_array())) {
+                $evento = self::almacenarEventos($fila);
+                array_push($eventos, $evento);
+            }
+
+            echo json_encode($eventos);
+        }
+
+        public function almacenarEventos($info) {
+            $data = array(
+               'idEvento' => $info['id_evento'],
+               'nombreAtleta' => $info['nombre'],
+               'lugar' => $info['lugar'],
+               'requisitos' => $info['requisitos'],
+               'fecha' => $info['fecha'],
+               'hora' => $info['hora'],
+            );
+   
+            return $data;
+         }
     }
 ?>

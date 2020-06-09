@@ -5,5 +5,5 @@
     $params = json_decode($json);
 
     $evento = new Evento();
-    $evento->crearEvento($params);
+    $evento->crearEvento($params->cedulaAtleta);
 ?>
