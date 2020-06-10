@@ -61,6 +61,64 @@
             echo  json_encode(array('estado' => mysqli_error($conexion)));
         }
 
+        public function obtenerMejorResultado($cedula) {
+            include self::rutaConfig();
+
+            $sqlEvento = "SELECT mejor_resultado.marca, evento.fecha
+                          FROM mejor_resultado
+                          INNER JOIN evento
+                          ON mejor_resultado.id_evento = evento.id_evento
+                          WHERE mejor_resultado.cedula_atleta = '$cedula'AND mejor_resultado.marca IS NOT NULL ";
+
+            $resultadoEventos = $conexion->query($sqlEvento);
+            $mejoresresultados = array();
+
+            while(($fila = $resultadoEventos->fetch_array())) {
+                $verificarMejor = false;
+                $i=0;
+
+                if(0 < count($mejoresresultados)) {
+
+                    foreach($mejoresresultados as $resultado){
+
+                        if($resultado['mes']  == date("M",strtotime( $fila['fecha'])) && $resultado['anio'] == date("Y",strtotime( $fila['fecha']))) {
+                            if( $fila['marca'] <= $resultado['marca']) {
+                                $mejoresresultados[$i]['marca'] = $fila['marca'];
+                            }
+
+                            $verificarMejor = true;
+                            break;
+                        } 
+
+                        $i++;
+
+                    }
+                }
+
+                if(!$verificarMejor) {
+                    $datos = self::almacenarMejoresResultados($fila);
+                    array_push($mejoresresultados, $datos);
+                }
+            }
+
+            echo  json_encode($mejoresresultados);
+
+        }
+
+        public function almacenarMejoresResultados($info) {
+            $mes = date("M",strtotime( $info['fecha']));
+            $anio = date("Y",strtotime( $info['fecha']));
+
+
+            $data = array(
+                'marca' => $info['marca'],
+                'mes' => $mes,
+                'anio' => $anio
+            );
+
+            return $data;
+        }
+
         public function almacenarEventos($info) {
             $data = array(
                'idEvento' => $info['id_evento'],
@@ -76,3 +134,4 @@
          }
     }
 ?>
+

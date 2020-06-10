@@ -33,6 +33,18 @@
          }
       }
 
+      public function consultarAtletaCedula($cedula){
+         include self::rutaConfig();
+
+         $sqlAtleta = "SELECT * FROM atleta WHERE cedula_atleta = '$cedula' ";
+         $resultadoAtleta = $conexion->query($sqlAtleta);
+
+         if (($fila = $resultadoAtleta->fetch_array())==true) { 
+            $atletas = self::almacenarInfoAtleta($fila);
+            echo json_encode($atletas);
+         }
+      }
+
       public function consultarAtletasEntrenador($id_entrenador) {
          include self::rutaConfig();
 
