@@ -10,7 +10,7 @@
         public function getCedulasEntrenadores() {
             include self::rutaConfig();
    
-            $sqlEntrenador = "SELECT cedula_entrenador FROM entrenador ";
+            $sqlEntrenador = "SELECT cedula_entrenador FROM entrenador WHERE estado != 'eliminado'";
             $resultadoEntrenadores = $conexion->query($sqlEntrenador);
    
             $cedulasEntrenadores = array();

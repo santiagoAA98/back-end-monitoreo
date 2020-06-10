@@ -9,7 +9,7 @@
      public function getCedulasAtletas() {
          include self::rutaConfig();
 
-         $sqlAtleta = "SELECT cedula_atleta FROM atleta ";
+         $sqlAtleta = "SELECT cedula_atleta FROM atleta WHERE estado != 'eliminado'";
          $resultadoAtletas = $conexion->query($sqlAtleta);
 
          $cedulasAtletas = array();
@@ -70,11 +70,11 @@
          $conexion->query(" INSERT INTO atleta (cedula_atleta, nombre, apellidos, edad, telefono,
                                                 correo, estatura, peso, talla_camisa, tipo_sangre,
                                                 alergias, operaciones, lesiones_graves, fracturas,
-                                                sexo, estado, usuario) 
+                                                sexo, estado, cedula_entrenador, usuario) 
                                           VALUE ('$atleta->cedula_atleta', '$atleta->nombre', '$atleta->apellidos', '$atleta->edad', '$atleta->telefono',
                                                 '$atleta->correo', '$atleta->estatura', '$atleta->peso', '$atleta->talla_camisa', '$atleta->tipo_sangre',
                                                 '$atleta->alergias', '$atleta->operaciones', '$atleta->lesiones_graves', '$atleta->fracturas',
-                                                '$atleta->sexo', 'activo', '$atleta->usuario') ");
+                                                '$atleta->sexo', 'activo', '$atleta->cedula_entrenador' ,'$atleta->usuario') ");
 
          self::crearDatoDeportivoAtleta($atleta);
          echo  json_encode(array('estado' => 'ok'));
@@ -94,8 +94,6 @@
                                                             pruebas, cedula_atleta) 
                                                    VALUE ('$dato_deportivo->especialidades', '$dato_deportivo->año_activo', 
                                                             '$dato_deportivo->pruebas', '$dato_deportivo->cedula_atleta') ");
-
-         echo  json_encode(array('estado' => mysqli_error($conexion)));
      }
 
       public function eliminarAtleta($cedula_atleta) {

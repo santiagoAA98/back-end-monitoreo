@@ -24,6 +24,5 @@
                 echo  json_encode(array('estado' => 'error'));
             }
         }
-
     }
 ?>
