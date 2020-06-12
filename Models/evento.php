@@ -68,7 +68,8 @@
                           FROM mejor_resultado
                           INNER JOIN evento
                           ON mejor_resultado.id_evento = evento.id_evento
-                          WHERE mejor_resultado.cedula_atleta = '$cedula'AND mejor_resultado.marca IS NOT NULL ";
+                          WHERE mejor_resultado.cedula_atleta = '$cedula' AND mejor_resultado.marca IS NOT NULL 
+                          ORDER BY evento.fecha ASC ";
 
             $resultadoEventos = $conexion->query($sqlEvento);
             $mejoresresultados = array();
